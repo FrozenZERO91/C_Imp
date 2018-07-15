@@ -110,6 +110,7 @@ void *xdag_create_key(xdag_hash_t privkey, xdag_hash_t pubkey, uint8_t *pubkey_b
 }
 
 // returns the internal representation of the key and the public key by the known private key
+// 通过已知的私钥，创建用于内部使用的密钥组成
 void *xdag_private_to_key(const xdag_hash_t privkey, xdag_hash_t pubkey, uint8_t *pubkey_bit)
 {
 	uint8_t buf[sizeof(xdag_hash_t) + 1];
