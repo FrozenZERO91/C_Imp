@@ -24,6 +24,7 @@ struct key_internal {
 
 // 默认钱包
 static struct key_internal *def_key = 0;
+// 公钥数组
 static struct xdag_public_key *keys_arr = 0;
 // 钱包文件同步锁
 static pthread_mutex_t wallet_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -71,6 +72,8 @@ static int add_key(xdag_hash_t priv)
 	def_key = k;
 	// nkeys序号  maxnKeys总秘钥数
 	if (nkeys == maxnkeys) {
+        // 重新分配内存，扩大keys_arr所占空间，增加一个用来存储新的xdag_public_key，成功返回新内存地址，失败返回NULL
+        // | 0xff 高地址位置0，保留低8位数，主要用来做数据类型转换时保持二进制数据一致性（补码）
 		struct xdag_public_key *newarr = (struct xdag_public_key *)
 			realloc(keys_arr, ((maxnkeys | 0xff) + 1) * sizeof(struct xdag_public_key));
 		if (!newarr) goto fail;
