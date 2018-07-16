@@ -21,7 +21,7 @@ extern int xdag_log(int level, const char *format, ...);
 extern char *xdag_log_array(const void *arr, unsigned size);
 
 extern int xdag_log_init(void);
-
+// 打印
 #define xdag_log_hash(hash) xdag_log_array(hash, sizeof(xdag_hash_t))
 
 // sets the maximum error level for output to the log, returns the previous level (0 - do not log anything, 9 - all)

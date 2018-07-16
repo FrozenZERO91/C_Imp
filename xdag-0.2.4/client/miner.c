@@ -128,6 +128,7 @@ static int send_to_pool(struct xdag_field *fld, int nfld)
 	}
 
 	if(nfld == XDAG_BLOCK_FIELDS) {
+        // 已16进制输出long long int（uint_64）
 		xdag_info("Sent  : %016llx%016llx%016llx%016llx t=%llx res=%d",
 			h[3], h[2], h[1], h[0], fld[0].time, 0);
 	}

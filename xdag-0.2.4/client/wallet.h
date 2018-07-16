@@ -27,4 +27,6 @@ extern struct xdag_public_key *xdag_wallet_our_keys(int *pnkeys);
 /* completes work with wallet */
 extern void xdag_wallet_finish(void);
 
+/* 通过私钥导入账户 */
+extern int xdag_wallet_import_key(xdag_hash_t hash);
 #endif

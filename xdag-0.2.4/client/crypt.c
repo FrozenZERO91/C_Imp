@@ -94,6 +94,7 @@ void *xdag_create_key(xdag_hash_t privkey, xdag_hash_t pubkey, uint8_t *pubkey_b
 	}
 
 	memcpy(pubkey, buf + 1, sizeof(xdag_hash_t));
+    // 1->00000001 清零高位（高位未使用数值是随机的）
 	*pubkey_bit = *buf & 1;
 	res = 0;
 

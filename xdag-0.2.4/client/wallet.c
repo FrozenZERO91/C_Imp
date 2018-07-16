@@ -111,6 +111,15 @@ int xdag_wallet_new_key(void)
 
 	return res;
 }
+/* imports a new key and sets is as defauld, returns its index */
+int xdag_wallet_import_key(xdag_hash_t hash){
+    int res = add_key(hash);
+    
+    if (!res) {
+        res =nkeys -1;
+    }
+    return res;
+}
 
 /* initializes a wallet */
 int xdag_wallet_init(void)
@@ -127,7 +136,7 @@ int xdag_wallet_init(void)
 		
 		f = xdag_open_file(WALLET_FILE, "r");
 		if (!f) return -1;
-		
+		// 重复调用？
 		fread(priv32, sizeof(xdag_hash_t), 1, f);
 		
 		n = 1;
@@ -136,6 +145,7 @@ int xdag_wallet_init(void)
 	}
 
 	while (fread(priv32, sizeof(xdag_hash_t), 1, f) == 1) {
+        // 解密私钥
 		xdag_user_crypt_action(priv32, n++, sizeof(xdag_hash_t) / sizeof(uint32_t), 2);
 		memcpy(priv, priv32, sizeof(xdag_hash_t));
 		add_key(priv);
