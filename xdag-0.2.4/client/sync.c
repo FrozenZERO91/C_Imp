@@ -10,7 +10,7 @@
 #include "transport.h"
 #include "utils/log.h"
 
-#define SYNC_HASH_SIZE      0x10000
+#define SYNC_HASH_SIZE      0x10000   // 65536
 #define get_list(hash)      (g_sync_hash   + ((hash)[0] & (SYNC_HASH_SIZE - 1)))
 #define get_list_r(hash)    (g_sync_hash_r + ((hash)[0] & (SYNC_HASH_SIZE - 1)))
 #define REQ_PERIOD          64

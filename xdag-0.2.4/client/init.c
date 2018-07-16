@@ -46,6 +46,8 @@ void printUsage(char* appName);
 
 int xdag_init(int argc, char **argv, int isGui)
 {
+    // char **argv 等价于 char *argv[],其中argv[0]是包含程序名的完整路径
+    // 初始化文件路径,设置全局变量g_xdag_current_path
     xdag_init_path(argv[0]);
 
 	const char *addrports[256], *bindto = 0, *pubaddr = 0, *pool_arg = 0, *miner_address = 0;
@@ -61,6 +63,7 @@ int xdag_init(int argc, char **argv, int isGui)
 	signal(SIGINT, SIG_IGN);
 	signal(SIGTERM, SIG_IGN);
 #endif
+    // 获取程序名称
 	g_progname = strdup(argv[0]);
 	while ((ptr = strchr(g_progname, '/')) || (ptr = strchr(g_progname, '\\'))) g_progname = ptr + 1;
 	if ((ptr = strchr(g_progname, '.'))) *ptr = 0;
@@ -82,6 +85,7 @@ int xdag_init(int argc, char **argv, int isGui)
 
 	for (int i = 1; i < argc; ++i) {
 		if (argv[i][0] != '-') {
+            // 获取矿池地址参数
 			if ((!argv[i][1] || argv[i][2]) && strchr(argv[i], ':')) {
 				is_miner = 1;
 				pool_arg = argv[i];
@@ -105,6 +109,7 @@ int xdag_init(int argc, char **argv, int isGui)
 			printUsage(argv[0]);
 			return 0;
 		} else if(ARG_EQUAL(argv[i], "-i", "")) { /* interactive mode */
+            // 启动交互模式
 			return terminal();
 		} else if(ARG_EQUAL(argv[i], "-l", "")) { /* list balance */
 			return out_balances();
@@ -173,7 +178,7 @@ int xdag_init(int argc, char **argv, int isGui)
 	if(g_xdag_testnet) {
 		g_block_header_type = XDAG_FIELD_HEAD_TEST; //block header has the different type in the test network
 	}
-
+    // memset初始化全局变量
 	memset(&g_xdag_stats, 0, sizeof(g_xdag_stats));
 	memset(&g_xdag_extstats, 0, sizeof(g_xdag_extstats));
 

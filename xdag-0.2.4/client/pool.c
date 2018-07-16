@@ -683,7 +683,7 @@ static int share_can_be_accepted(struct miner_pool_data *miner, xdag_hash_t shar
 	HASH_ADD(hh, miner->nonces, key, sizeof(uint64_t), eln);
 	return 1;
 }
-
+// 收到数据
 static int receive_data_from_connection(connection_list_element *connection)
 {
 #if _DEBUG

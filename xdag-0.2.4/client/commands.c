@@ -287,11 +287,16 @@ void processBalanceCommand(char *nextParam, FILE *out)
 	} else {
 		xdag_hash_t hash;
 		xdag_amount_t balance;
+        // 获取命令参数
 		char *cmd = strtok_r(nextParam, " \t\r\n", &nextParam);
 		if(cmd) {
+            // 获得特定地址余额
+            // 地址转hash
 			xdag_address2hash(cmd, hash);
+            // 获取账号余额
 			balance = xdag_get_balance(hash);
 		} else {
+            // 获得所有地址余额
 			balance = xdag_get_balance(0);
 		}
 		fprintf(out, "Balance: %.9Lf %s\n", amount2xdags(balance), g_coinname);
@@ -610,7 +615,7 @@ static int make_transaction_block(struct xfer_callback_data *xferData)
 	xferData->outsig = 1;
 	return 0;
 }
-
+// 发起交易
 int xdag_do_xfer(void *outv, const char *amount, const char *address, int isGui)
 {
 	char address_buf[33];
@@ -636,6 +641,7 @@ int xdag_do_xfer(void *outv, const char *amount, const char *address, int isGui)
 		}
 		return 1;
 	}
+    // 验证接收方地址是否合法
 	if(xdag_address2hash(address, xfer.fields[XFER_MAX_IN].hash)) {
 		if(out) {
 			fprintf(out, "Xfer: incorrect address.\n");

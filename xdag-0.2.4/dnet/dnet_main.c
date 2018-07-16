@@ -76,18 +76,31 @@ static void angelize(void) {
 #if !defined(__LDuS__) && !defined(QDNET) && !defined(_WIN32) && !defined(_WIN64) && !defined(NO_DNET_FORK)
     int stat = 0;
     pid_t childpid;
+    // fork() 从fork之后的代码开始复制一个进程执行相同代码，其中父进程中fork返回值为子进程标记，子进程中返回值值为0，函数执行失败返回-1，通过返回值来区分父子进程
+    /*
+        父进程返回结果是子进程pid，所有会执行循环体，阻塞等待子进程结束，如果子进程意外结束或出错，则继续循环创建新的子进程
+        子进程返回结果是0，所以执行跳出循环，执行循环后面的代码
+     */
 	while ((childpid = fork())) {
-		signal(SIGINT, SIG_IGN);
-		signal(SIGTERM, SIG_IGN);
+        signal(SIGINT, SIG_IGN);
+        signal(SIGTERM, SIG_IGN);
+        // waitpid 父进程阻塞，等待目标子进程结束，结束状态存入stat中返回值为子进程pid。如果调用中出错，则返回-1，错误存储在errno中。如果没有发现可等待子进程，则返回0.
+        printf("childpid:%d\n", childpid);
 		if (childpid > 0) while (waitpid(childpid, &stat, 0) == -1) {
             if (errno != EINTR) {
+                // 如果错误信号不是系统调用的中断信号，终止执行，跳出程序
+                // 如果父进程abort,子进程会成为孤儿进程
+                printf("abort ....");
                 abort();
             }
         }
-        if (stat >= 0 && stat <= 5) {
+        printf("stat = %d\n",stat);
+        if (stat >= 0 && stat <= 5 && stat != 5) {
+            // exit退出进程，父进程返回给系统，子进程返回给父进程
             exit(stat);
         }
         sleep(10);
+        // 父进程会一直阻塞
     }
 #endif
 }

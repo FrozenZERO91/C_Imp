@@ -268,6 +268,7 @@ int dnet_crypt_init(const char *version) {
     if (!f) {
         char buf[256];
         struct dfslib_string str;
+        // 新建，存在旧的删除
 		f = xdag_open_file(KEYFILE, "wb");
 		if (!f) return 3;
 #ifndef QDNET

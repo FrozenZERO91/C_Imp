@@ -1210,10 +1210,12 @@ int xdag_traverse_all_blocks(void *data, int (*callback)(void *data, xdag_hash_t
 xdag_amount_t xdag_get_balance(xdag_hash_t hash)
 {
 	if (!hash) {
+        // hash 0 获取所有账户余额
 		return g_balance;
 	}
-
+    // 获取特定地址余额
 	pthread_mutex_lock(&block_mutex);
+    // 根据hash找账号block hash 0
 	struct block_internal *bi = block_by_hash(hash);
 	pthread_mutex_unlock(&block_mutex);
 	

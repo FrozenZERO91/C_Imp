@@ -266,7 +266,7 @@ int dnet_traverse_threads(int(*callback)(struct dnet_thread *, void *), void *da
 	pthread_rwlock_unlock(&g_threads_rwlock);
 	return res;
 }
-
+// 网络线程垃圾回收
 static int dnet_garbage_collect(void)
 {
 	struct list *l, *lnext;

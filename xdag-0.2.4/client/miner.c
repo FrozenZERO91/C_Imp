@@ -299,6 +299,7 @@ begin:
 				dfslib_uncrypt_array(g_crypt, (uint32_t*)last->data, DATA_SIZE, m->nfield_in++);
 
 				if(!memcmp(last->data, hash, sizeof(xdag_hashlow_t))) {
+                    // 按地址给block（内部数据模型）设置余额
 					xdag_set_balance(hash, last->amount);
 					
 					pthread_mutex_lock(&g_transport_mutex);

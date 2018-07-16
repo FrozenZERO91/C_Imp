@@ -215,6 +215,7 @@ static int process_transport_block(struct xdag_block *received_block, void *conn
 	return 0;
 }
 
+// 接收到区块的回调
 static int block_arrive_callback(void *packet, void *connection)
 {
 	struct xdag_block *received_block = (struct xdag_block *)packet;
@@ -222,9 +223,11 @@ static int block_arrive_callback(void *packet, void *connection)
 	conn_add_rm(connection, 1);
 
 	const enum xdag_field_type first_field_type = xdag_type(received_block, 0);
+    // 一般区块，添加
 	if(first_field_type == g_block_header_type) {
 		xdag_sync_add_block(received_block, connection);
 	}
+    // 伪块 节点通讯，需要对方答复
 	else if(first_field_type == XDAG_FIELD_NONCE) {
 		process_transport_block(received_block, connection);
 	}
@@ -235,6 +238,7 @@ static int block_arrive_callback(void *packet, void *connection)
 	return 0;
 }
 
+// 检查节点IP，只接收白名单
 static int conn_open_check(void *conn, uint32_t ip, uint16_t port)
 {
 	for (int i = 0; i < g_xdag_n_blocked_ips; ++i) {
@@ -289,7 +293,9 @@ int xdag_transport_start(int flags, const char *bindto, int npairs, const char *
 	}
 	argv[argc] = 0;
 	
+    // 设置区块处理回调方法  给函数指针xdag_callback赋值
 	dnet_set_xdag_callback(block_arrive_callback);
+    // 给函数指针dnet_connection_open_check赋值，检查对方节点IP
 	dnet_connection_open_check = &conn_open_check;
 	dnet_connection_close_notify = &conn_close_notify;
 	
